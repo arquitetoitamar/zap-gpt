@@ -1,6 +1,7 @@
 import { create } from 'venom-bot'
 import * as dotenv from 'dotenv'
 import { Configuration, OpenAIApi } from "openai"
+var request = require('request');
 
 dotenv.config()
 
@@ -34,7 +35,25 @@ const getDavinciResponse = async (clientText) => {
         response.data.choices.forEach(({ text }) => {
             botResponse += text
         })
-        return `Chat GPT 🤖\n\n ${botResponse.trim()}`
+        return `Ita Bot🤖\n\n ${botResponse.trim()}`
+    } catch (e) {
+        return `❌ OpenAI Response Error: ${e.response.data.error.message}`
+    }
+}
+const sendEmailResponse = async (to,text,subject) => {
+    try {
+        request({
+            url: 'http://admin:admin@activemq.gerenciapedidos.com.br:8161/api/message?destination=queue://email.topic.send',
+            method: 'POST',
+            json: {
+                to: to, // Modelo GPT a ser usado
+                subject: subject, // Texto enviado pelo usuário
+                text: text
+            }
+          }, function(error, response, body){
+            console.log(body);
+          });
+        return `Ita Bot🤖\n\n email enviado!}`
     } catch (e) {
         return `❌ OpenAI Response Error: ${e.response.data.error.message}`
     }
@@ -55,10 +74,13 @@ const getDalleResponse = async (clientText) => {
     }
 }
 
+
+
 const commands = (client, message) => {
     const iaCommands = {
-        davinci3: "/bot",
-        dalle: "/img"
+        davinci3: "ita",
+        dalle: "/img",
+        email: "/email"
     }
 
     let firstWord = message.text.substring(0, message.text.indexOf(" "));
@@ -67,6 +89,7 @@ const commands = (client, message) => {
         case iaCommands.davinci3:
             const question = message.text.substring(message.text.indexOf(" "));
             getDavinciResponse(question).then((response) => {
+                //console.log(response);
                 /*
                  * Faremos uma validação no message.from
                  * para caso a gente envie um comando
@@ -74,7 +97,8 @@ const commands = (client, message) => {
                  * nosso próprio número e sim para 
                  * a pessoa ou grupo para o qual eu enviei
                  */
-                client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
+                client.sendText(message.from, response)
+               // client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
             })
             break;
 
@@ -85,8 +109,16 @@ const commands = (client, message) => {
                     message.from === process.env.BOT_NUMBER ? message.to : message.from,
                     imgUrl,
                     imgDescription,
-                    'Imagem gerada pela IA DALL-E 🤖'
+                    'Imagem gerada pela IA🤖'
                 )
+            })
+            break;
+        case iaCommands.email:
+            const bodyMessage = message.text.substring(message.text.indexOf("mensagem:") + 1);
+            const to = message.text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
+
+            sendEmail(to, bodyMessage, "Bot").then((response) => {
+                client.sendText(message.from, response)
             })
             break;
     }
