@@ -1,7 +1,8 @@
 import { create } from 'venom-bot'
 import * as dotenv from 'dotenv'
 import { Configuration, OpenAIApi } from "openai"
-var request = require('request');
+import axios from 'axios';
+
 
 dotenv.config()
 
@@ -42,20 +43,19 @@ const getDavinciResponse = async (clientText) => {
 }
 const sendEmailResponse = async (to,text,subject) => {
     try {
-        request({
-            url: 'http://admin:admin@activemq.gerenciapedidos.com.br:8161/api/message?destination=queue://email.topic.send',
-            method: 'POST',
-            json: {
-                to: to, // Modelo GPT a ser usado
-                subject: subject, // Texto enviado pelo usuário
-                text: text
-            }
-          }, function(error, response, body){
-            console.log(body);
-          });
+        var body = {
+            to: to, // Modelo GPT a ser usado
+            subject: subject, // Texto enviado pelo usuário
+            text: text
+        }
+
+        const response = await axios.post(
+            'http://admin:admin@activemq.gerenciapedidos.com.br:8161/api/message?destination=queue://email.topic.send', 
+            JSON.parse(body));
+
         return `Ita Bot🤖\n\n email enviado!}`
     } catch (e) {
-        return `❌ OpenAI Response Error: ${e.response.data.error.message}`
+        return `❌ OpenAI Response Error: ${e}`
     }
 }
 
@@ -117,7 +117,7 @@ const commands = (client, message) => {
             const bodyMessage = message.text.substring(message.text.indexOf("mensagem:") + 1);
             const to = message.text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
 
-            sendEmail(to, bodyMessage, "Bot").then((response) => {
+            sendEmailResponse(to, bodyMessage, "Bot").then((response) => {
                 client.sendText(message.from, response)
             })
             break;
