@@ -10,6 +10,6 @@ RUN apt-get update \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 COPY . /usr/src/app
-RUN npm install
+RUN npm install --force
 
 CMD "node" "index.js"
