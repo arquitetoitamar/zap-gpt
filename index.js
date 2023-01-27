@@ -123,8 +123,9 @@ const commands = (client, message) => {
         })
     } 
 
-    if(msg.toUpperCase().match(/BOM DIA/) || msg.toUpperCase().match(/BOA TARDE/)
-    || msg.toUpperCase().match(/BOA NOITE/)){
+    if(msg.toUpperCase().match(/BOM DIA/) 
+        || msg.toUpperCase().match(/BOA TARDE/)
+        || msg.toUpperCase().match(/BOA NOITE/)){
         getDavinciResponse(msg).then((response) => {
             console.log(msg)
             //console.log(response);
