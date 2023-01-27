@@ -2,6 +2,7 @@ import { create } from 'venom-bot'
 import * as dotenv from 'dotenv'
 import { Configuration, OpenAIApi } from "openai"
 import axios from 'axios';
+import chalk from 'chalk';
 import {
     calcularPrecoPrazo,
     consultarCep,
@@ -9,11 +10,28 @@ import {
   } from 'correios-brasil';
 
 dotenv.config()
+export const { log } = console;
+
+const map1 = new Map();
+
+map1.set("Objeto em trânsito - por favor aguarde","🚚");
+map1.set("Objeto saiu para entrega ao destinatário","🙌");
+map1.set("Objeto entregue ao destinatário","🎁");
+map1.set("Pagamento confirmado","🤑");
+map1.set("Aguardando o pagamento do despacho postal","💸");
+map1.set("Objeto encaminhado para fiscalização aduaneira","🔎");
+map1.set("Objeto recebido pelos correios do Brasil","🛬");
+map1.set("Objeto postado","📦");
+map1.set("DAFAULT","🚧");
+
+export function getIcon(status) {
+	return map1.get(status) || map1.get('DEFAULT');
+}
 
 create({
     session: 'Chat-GPT',
     multidevice: true
-})
+    })
     .then((client) => start(client))
     .catch((erro) => {
         console.log(erro);
@@ -25,6 +43,7 @@ const configuration = new Configuration({
 });
 
 const openai = new OpenAIApi(configuration);
+
 
 const getDavinciResponse = async (clientText) => {
     const options = {
@@ -52,10 +71,27 @@ const tracking = async (objNumber) => {
         let codRastreio = []; // array de códigos de rastreios
         codRastreio.push(objNumber.trim())
 
-
         const response = await rastrearEncomendas(codRastreio)
-        return response[0]
-       
+      
+        const events = response[0]?.eventos || [];
+        let result = ''
+        events?.reverse().forEach((event) => {
+            const { descricao, dtHrCriado, unidade, unidadeDestino } = event;
+    
+            log(`==> ${getIcon(descricao)} ${chalk.bold(descricao)}`);
+            log(chalk.blackBright(`Data: ${new Date(dtHrCriado).toLocaleString()}`));
+            log(chalk.blackBright(`Local: ${unidade}`));
+            
+            result += `==> ${getIcon(descricao)} ${descricao}`  + '\n'
+            result += `Data: ${new Date(dtHrCriado).toLocaleString()}` + '\n'
+            result += `Local: ${unidade}` + '\n'
+
+            if (unidadeDestino) {
+                log(chalk.blackBright(`Indo para: ${unidadeDestino}`));
+            }
+           
+        });
+        return result
     } catch (e) {
         return `❌ OpenAI Response Error: ${e}`
     }
