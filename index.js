@@ -82,9 +82,9 @@ const tracking = async (objNumber) => {
             log(chalk.blackBright(`Data: ${new Date(dtHrCriado).toLocaleString()}`));
             log(chalk.blackBright(`Local: ${unidade}`));
             
-            result += `==> ${getIcon(descricao)} ${descricao}`  + '\n'
-            result += `Data: ${new Date(dtHrCriado).toLocaleString()}` + '\n'
-            result += `Local: ${unidade}` + '\n'
+            result += `==> ${getIcon(descricao)} ${descricao}`  + ' \n'
+            result += `Data: ${new Date(dtHrCriado).toLocaleString()}` + ' \n'
+            result += `Local: ${unidade}` + ' \n'
 
             if (unidadeDestino) {
                 log(chalk.blackBright(`Indo para: ${unidadeDestino}`));
