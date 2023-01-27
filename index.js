@@ -118,8 +118,8 @@ const commands = (client, message) => {
              * nosso próprio número e sim para 
              * a pessoa ou grupo para o qual eu enviei
              */
-           client.sendText(message.from, response)
-           // client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
+           //client.sendText(message.from, response)
+           client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
         })
     } 
 
@@ -136,7 +136,8 @@ const commands = (client, message) => {
              * nosso próprio número e sim para 
              * a pessoa ou grupo para o qual eu enviei
              */
-            client.sendText(message.from, response)
+            //client.sendText(message.from, response)
+           client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
            //client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
         })
     } 
@@ -156,7 +157,8 @@ const commands = (client, message) => {
                  * nosso próprio número e sim para 
                  * a pessoa ou grupo para o qual eu enviei
                  */
-                client.sendText(message.from, response)
+                //client.sendText(message.from, response)
+                    client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
                // client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
             })
             break;
@@ -185,7 +187,8 @@ const commands = (client, message) => {
 
             tracking(trackingNumber).then((response) => {
                 console.log(response)
-                client.sendText(message.from, JSON.stringify(response))
+                //client.sendText(message.from, JSON.stringify(response))
+                client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, JSON.stringify(response))
             })
             break;
     }
