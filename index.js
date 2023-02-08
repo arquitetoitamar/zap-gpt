@@ -61,7 +61,8 @@ const getDavinciResponse = async (clientText) => {
         })
         return `🤖\n\n ${botResponse.trim()}`
     } catch (e) {
-        return `❌ OpenAI Response Error: ${e.response.data.error.message}`
+        //  OpenAI Response Error: ${e.response.data.error.message}
+        return `🤖`
     }
 }
 const tracking = async (objNumber) => {
@@ -93,7 +94,8 @@ const tracking = async (objNumber) => {
         });
         return result
     } catch (e) {
-        return `❌ OpenAI Response Error: ${e}`
+        //return `❌ OpenAI Response Error: ${e}`
+        return `🤖`
     }
 }
 
@@ -113,7 +115,8 @@ const sendEmailResponse = async (to,text,subject) => {
 
         return `🤖\n\n email enviado!}`
     } catch (e) {
-        return `❌ OpenAI Response Error: ${e}`
+        //return `❌ OpenAI Response Error: ${e}`
+        return `🤖`
     }
 }
 
@@ -128,7 +131,8 @@ const getDalleResponse = async (clientText) => {
         const response = await openai.createImage(options);
         return response.data.data[0].url
     } catch (e) {
-        return `❌ OpenAI Response Error: ${e}`
+       // return `❌ OpenAI Response Error: ${e}`
+        return `🤖`
     }
 }
 
