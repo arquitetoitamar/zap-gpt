@@ -1,3 +1,3 @@
-2023/01/31-22:56:27.279 2b0d4 Reusing MANIFEST /home/itamar/git/zap-gpt/tokens/Chat-GPT/Default/Local Storage/leveldb/MANIFEST-000001
-2023/01/31-22:56:27.279 2b0d4 Recovering log #44
-2023/01/31-22:56:27.279 2b0d4 Reusing old log /home/itamar/git/zap-gpt/tokens/Chat-GPT/Default/Local Storage/leveldb/000044.log 
+2023/02/13-10:45:27.470 de10 Reusing MANIFEST D:\tiops\git\zap-gpt\tokens\Chat-GPT\Default\Local Storage\leveldb/MANIFEST-000001
+2023/02/13-10:45:27.472 de10 Recovering log #48
+2023/02/13-10:45:27.472 de10 Reusing old log D:\tiops\git\zap-gpt\tokens\Chat-GPT\Default\Local Storage\leveldb/000048.log 

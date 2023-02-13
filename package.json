@@ -16,6 +16,7 @@
     "correios-brasil": "^3.0.4",
     "cron-schedule": "^3.0.6",
     "dotenv": "^16.0.3",
+    "midjourney-client": "^1.0.2",
     "openai": "^3.1.0",
     "request": "^2.88.2",
     "venom-bot": "^4.3.7"

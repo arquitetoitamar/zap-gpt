@@ -9,6 +9,8 @@ import {
     rastrearEncomendas,
   } from 'correios-brasil';
 
+import midjourney from 'midjourney-client';
+
 dotenv.config()
 export const { log } = console;
 
@@ -65,6 +67,7 @@ const getDavinciResponse = async (clientText) => {
         return `🤖`
     }
 }
+
 const tracking = async (objNumber) => {
 
     try {
@@ -143,11 +146,12 @@ const commands = (client, message) => {
         davinci3: "ita",
         dalle: "/img",
         email: "/email",
-        rastreio: "/rastreio"
+        rastreio: "/rastreio",
+        midjourney: "/mid"
     }
     let msg = message.text;
 
-    if(msg.toUpperCase().match(/ITA /)){
+    if (msg.toUpperCase().match(/ITA /)){
         getDavinciResponse(msg).then((response) => {
             console.log(msg)
             //console.log(response);
@@ -230,6 +234,20 @@ const commands = (client, message) => {
                 //client.sendText(message.from, JSON.stringify(response))
                 client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, JSON.stringify(response))
             })
+            break;
+         case iaCommands.midjourney:
+            const midCommand = message.text.substring(message.text.indexOf(" "));
+            console.log("mid")
+            midjourney(midCommand)
+              .then((result)=>{
+                console.log(result)
+                client.sendImage(message.from === process.env.BOT_NUMBER ? message.to : message.from, result[0], "Imagem Gerada Midjourney")
+              }).catch((error)=>{
+                console.log(error)
+              })
+           
+            //client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, )
+            
             break;
     }
 }
