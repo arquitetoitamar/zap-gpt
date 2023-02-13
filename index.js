@@ -126,7 +126,7 @@ const sendEmailResponse = async (to,text,subject) => {
 const getDalleResponse = async (clientText) => {
     const options = {
         prompt: clientText, // Descrição da imagem
-        n: 1, // Número de imagens a serem geradas
+        n: 4, // Número de imagens a serem geradas
         size: "1024x1024", // Tamanho da imagem
     }
 
@@ -238,15 +238,23 @@ const commands = (client, message) => {
          case iaCommands.midjourney:
             const midCommand = message.text.substring(message.text.indexOf(" "));
             console.log("mid")
-            midjourney(midCommand)
-              .then((result)=>{
-                console.log(result)
-                client.sendImage(message.from === process.env.BOT_NUMBER ? message.to : message.from, result[0], "Imagem Gerada Midjourney")
-              }).catch((error)=>{
-                console.log(error)
-              })
-           
-            //client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, )
+
+            try {
+                midjourney(midCommand, { num_outputs: 4  })
+                .then((result)=>{
+                  console.log(result)
+             
+                  result.forEach(element => client.sendImage(message.from === process.env.BOT_NUMBER ? message.to : message.from, element, "Imagem Gerada Midjourney"));
+                  
+                }).catch((error)=>{
+                  console.log(error)
+                })
+             
+            } catch (e) {
+               // return `❌ OpenAI Response Error: ${e}`
+                return `🤖`
+            }
+
             
             break;
     }
