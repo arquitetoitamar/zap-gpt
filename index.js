@@ -27,7 +27,7 @@ map1.set("Objeto postado","📦");
 map1.set("DAFAULT","🚧");
 
 export function getIcon(status) {
-	return map1.get(status) || map1.get('DEFAULT');
+        return map1.get(status) || map1.get('DEFAULT');
 }
 
 create({
@@ -76,16 +76,16 @@ const tracking = async (objNumber) => {
         codRastreio.push(objNumber.trim())
 
         const response = await rastrearEncomendas(codRastreio)
-      
+
         const events = response[0]?.eventos || [];
         let result = ''
         events?.reverse().forEach((event) => {
             const { descricao, dtHrCriado, unidade, unidadeDestino } = event;
-    
+
             log(`==> ${getIcon(descricao)} ${chalk.bold(descricao)}`);
             log(chalk.blackBright(`Data: ${new Date(dtHrCriado).toLocaleString()}`));
             log(chalk.blackBright(`Local: ${unidade}`));
-            
+
             result += `==> ${getIcon(descricao)} ${descricao}`
             result += `Data: ${new Date(dtHrCriado).toLocaleString()}`
             result += `Local: ${unidade}`
@@ -113,7 +113,7 @@ const sendEmailResponse = async (to,text,subject) => {
         //console.log(body)
 
         const response = await axios.post(
-            'http://admin:admin@activemq.gerenciapedidos.com.br:8161/api/message?destination=queue://email.topic.send', 
+            'http://admin:admin@activemq.gerenciapedidos.com.br:8161/api/message?destination=queue://email.topic.send',
             body);
 
         return `🤖\n\n email enviado!}`
@@ -141,7 +141,7 @@ const getDalleResponse = async (clientText) => {
 
 
 
-const commands = (client, message) => {
+const commands = async(client, message) => {
     const iaCommands = {
         davinci3: "ita",
         dalle: "/img",
@@ -159,15 +159,15 @@ const commands = (client, message) => {
              * Faremos uma validação no message.from
              * para caso a gente envie um comando
              * a response não seja enviada para
-             * nosso próprio número e sim para 
+             * nosso próprio número e sim para
              * a pessoa ou grupo para o qual eu enviei
              */
            //client.sendText(message.from, response)
            client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
         })
-    } 
+    }
 
-    if(msg.toUpperCase().match(/BOM DIA/) 
+    if(msg.toUpperCase().match(/BOM DIA/)
         || msg.toUpperCase().match(/BOA TARDE/)
         || msg.toUpperCase().match(/BOA NOITE/)){
         getDavinciResponse(msg).then((response) => {
@@ -177,17 +177,17 @@ const commands = (client, message) => {
              * Faremos uma validação no message.from
              * para caso a gente envie um comando
              * a response não seja enviada para
-             * nosso próprio número e sim para 
+             * nosso próprio número e sim para
              * a pessoa ou grupo para o qual eu enviei
              */
             //client.sendText(message.from, response)
            client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
            //client.sendText(message.from === process.env.BOT_NUMBER ? message.to : message.from, response)
         })
-    } 
+    }
 
     let firstWord = msg.substring(0, message.text.indexOf(" "));
-    
+
     switch (firstWord) {
         case iaCommands.davinci3:
             const question = message.text.substring(message.text.indexOf(" "));
@@ -198,7 +198,7 @@ const commands = (client, message) => {
                  * Faremos uma validação no message.from
                  * para caso a gente envie um comando
                  * a response não seja enviada para
-                 * nosso próprio número e sim para 
+                 * nosso próprio número e sim para
                  * a pessoa ou grupo para o qual eu enviei
                  */
                 //client.sendText(message.from, response)
@@ -240,22 +240,26 @@ const commands = (client, message) => {
             console.log("mid")
 
             try {
-                midjourney(midCommand, { num_outputs: 4  })
-                .then((result)=>{
-                  console.log(result)
-             
-                  result.forEach(element => client.sendImage(message.from === process.env.BOT_NUMBER ? message.to : message.from, element, "Imagem Gerada Midjourney"));
-                  
-                }).catch((error)=>{
-                  console.log(error)
+                const im = message.text.substring(message.text.indexOf(" "));
+                
+                await  midjourney(im, { width: 1024 }).then((response)=>{
+                    console.log(response)
+                    client.sendImage(
+                        message.from === process.env.BOT_NUMBER ? message.to : message.from,
+                        response[0],
+                        im,
+                        'Imagem gerada pela IA mid journey🤖'
+                    )
                 })
-             
+
+                
+
             } catch (e) {
                // return `❌ OpenAI Response Error: ${e}`
                 return `🤖`
             }
 
-            
+
             break;
     }
 }
