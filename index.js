@@ -47,7 +47,7 @@ const openai = new OpenAIApi(configuration);
 
 const getDavinciResponse = async (clientText) => {
     const options = {
-        model: "text-davinci-003", // Modelo GPT a ser usado
+        model: "text-davinci-003", // Modelo GPT a ser usado text-davinci-003"
         prompt: clientText, // Texto enviado pelo usuário
         temperature: 1, // Nível de variação das respostas geradas, 1 é o máximo
         max_tokens: 4000 // Quantidade de tokens (palavras) a serem retornadas pelo bot, 4000 é o máximo
@@ -235,5 +235,7 @@ const commands = (client, message) => {
 }
 
 async function start(client) {
-    client.onAnyMessage((message) => commands(client, message));
+    client.onAnyMessage((message) => commands(client, message)).catch((error)=>{
+        console.log(error);
+    });
 }
