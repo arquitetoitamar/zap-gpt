@@ -3,9 +3,6 @@
 
 A integração permitirá que usuários interajam com o ChatGPT através de mensagens de texto no WhatsApp, fornecendo respostas automatizadas baseadas em suas perguntas e comandos.
 
-Neste artigo voce consegue ver como criar do 0 -> [Tab News](https://www.tabnews.com.br/victorharry/guia-completo-de-como-integrar-o-chat-gpt-com-whatsapp)
-
-
 ## Tecnologias
 
 - [OpenIA](https://beta.openai.com/)
