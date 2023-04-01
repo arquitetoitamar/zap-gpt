@@ -5,9 +5,6 @@ A integração permitirá que usuários interajam com o ChatGPT através de mens
 
 Neste artigo voce consegue ver como criar do 0 -> [Tab News](https://www.tabnews.com.br/victorharry/guia-completo-de-como-integrar-o-chat-gpt-com-whatsapp)
 
-## Demo
-
-![Imagem gerada no Midjourney](https://miro.medium.com/max/720/1*0K0tAo1ujQoFa9NG3ClIdw.webp)
 
 ## Tecnologias
 
@@ -19,7 +16,7 @@ Neste artigo voce consegue ver como criar do 0 -> [Tab News](https://www.tabnews
 Clone este projeto com o comando:
 
 ```bash
-  git clone https://github.com/victorharry/zap-gpt.git
+  git clone https://github.com/gerenciapedidos/zap-gpt
 ```
 
 Vá até o arquivo .env.example e renomeie-o para .env, e altere os valores necessários para seu funcionamento.
